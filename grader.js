@@ -74,10 +74,16 @@ if(require.main == module) {
     			console.log("%s cannot be found: %s", instr, result.message);
     			process.exit(1);
   		} else {            
-    			 fs.writeFileSync('index.html', result);   
-   			 var html = "index.html";
-    var checkJson = checkHtmlFile(html, program.checks);
-    var outJson = JSON.stringify(checkJson, null, 4);
+                    $ = cheerio.load(result);
+	var checks = loadChecks(program.checks).sort();
+        var out = {};
+        for (var ii in checks) {
+            var present = $(checks[ii]).length > 0;
+            out[checks[ii]] = present;
+        }   
+
+
+var outJson = JSON.stringify(out, null, 4);
     console.log(outJson);
   		}
 		});
